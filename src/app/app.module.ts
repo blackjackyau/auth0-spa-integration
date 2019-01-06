@@ -6,17 +6,21 @@ import { AppComponent } from './app.component';
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
+import { HttpClientModule } from '@angular/common/http';
+import { PingComponent } from './ping/ping.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CallbackComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
+    PingComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

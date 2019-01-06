@@ -17,6 +17,12 @@
       </button>
 
       <button
+        class="btn btn-primary btn-margin"
+        *ngIf="auth.isAuthenticated()"
+        routerLink="/ping">Ping
+      </button>
+
+      <button
         id="qsLoginBtn"
         class="btn btn-primary btn-margin"
         *ngIf="!auth.isAuthenticated()"

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';
+import { AUTH_CONFIG } from './auth0-variables';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,12 @@ export class AuthService {
   private _expiresAt: number;
 
   auth0 = new auth0.WebAuth({
-    clientID: 'JPweZP1u1sA9EkyPNFYqxpMFcXp1N3qa',
-    domain: 'blax.auth0.com',
+    clientID: AUTH_CONFIG.clientID,
+    domain: AUTH_CONFIG.domain,
     responseType: 'token id_token',
-    redirectUri: 'http://localhost:4200/callback',
-    scope: 'openid profile'
+    audience: AUTH_CONFIG.apiUrl,
+    redirectUri: AUTH_CONFIG.callbackURL,
+    scope: 'openid profile read:messages write:messages'
   });
 
   userProfile: any;
