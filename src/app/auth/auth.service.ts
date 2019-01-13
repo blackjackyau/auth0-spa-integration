@@ -2,11 +2,32 @@ import { Injectable } from '@angular/core';
 import * as auth0 from 'auth0-js';
 import { Router } from '@angular/router';
 import { AUTH_CONFIG } from './auth0-variables';
+import { Observable, of, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  constructor(public router: Router) {
+    this._idToken = '';
+    this._accessToken = '';
+    this._expiresAt = 0;
+  }
+
+
+  get accessToken(): string {
+    return this._accessToken;
+  }
+
+  get idToken(): string {
+    return this._idToken;
+  }
+
+  get expiredAt(): string {
+    return this._expiresAt.toString();
+  }
 
   private _idToken: string;
   private _accessToken: string;
@@ -23,11 +44,7 @@ export class AuthService {
 
   userProfile: any;
 
-  constructor(public router: Router) {
-    this._idToken = '';
-    this._accessToken = '';
-    this._expiresAt = 0;
-  }
+  refreshSubscription: any;
 
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
@@ -94,16 +111,37 @@ export class AuthService {
     });
   }
 
-
-  get accessToken(): string {
-    return this._accessToken;
-  }
-
-  get idToken(): string {
-    return this._idToken;
-  }
-
   public login(): void {
     this.auth0.authorize();
+  }
+
+  public scheduleRenewal() {
+    if (!this.isAuthenticated()) { return; }
+    this.unscheduleRenewal();
+
+    const expiresAt = this._expiresAt;
+
+    const source = of(expiresAt).pipe(switchMap(
+      expAt => {
+
+        const now = Date.now();
+
+        // Use the delay in a timer to
+        // run the refresh at the proper time
+        return timer(Math.max(1, expAt - now));
+      }));
+
+    // Once the delay time from above is
+    // reached, get a new JWT and schedule
+    // additional refreshes
+    this.refreshSubscription = source.subscribe(() => {
+      this.renewTokens();
+      this.scheduleRenewal();
+    });
+  }
+
+  public unscheduleRenewal() {
+    if (!this.refreshSubscription) { return; }
+    this.refreshSubscription.unsubscribe();
   }
 }

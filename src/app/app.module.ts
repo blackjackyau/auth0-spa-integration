@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PingComponent } from './ping/ping.component';
+import { TokenManagementComponent } from './token-management/token-management.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { PingComponent } from './ping/ping.component';
     CallbackComponent,
     HomeComponent,
     ProfileComponent,
-    PingComponent
+    PingComponent,
+    TokenManagementComponent,
   ],
   imports: [
     BrowserModule,

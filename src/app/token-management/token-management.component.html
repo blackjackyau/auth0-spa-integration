@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3>Token Management</h3>
+    <button class="btn btn-primary" (click)="authService.renewTokens()">
+      Renew Token
+    </button>
+  </div>
+  <div class="panel-body">
+    <div>
+      <label>Access Token</label>
+      <h3>{{ getDecodedAccessToken(authService.accessToken) | json }}</h3>
+    </div>
+    <div>
+      <label>Id Token</label>
+      <h3>{{ authService?.idToken }}</h3>
+    </div>
+    <div>
+      <label>Expired At</label>
+      <h3>{{ authService?.expiredAt }}</h3>
+    </div>
+  </div>
+</div>
